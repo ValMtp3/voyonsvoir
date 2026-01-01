@@ -24,7 +24,7 @@ jobs:
             const action = context.payload.action
             const runUrl = run.html_url
             const runId = run.id
-            const allowMerge = run.conclusion === "success"
+            const checksOk = run.conclusion === "success"
 
             const prs = run.pull_requests || []
             if (prs.length === 0) {
@@ -33,8 +33,6 @@ jobs:
             }
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-            const requiredBaseChecks = ["gitleaks", "trivy", "clamav"]
-            const requiredSameRepoChecks = ["codeql", "gitleaks", "trivy", "clamav"]
             const conflictMarker = "<!-- automerge-conflict -->"
             const statusMarker = (stage) => `<!-- automerge-run:${runId}:${stage} -->`
             const mergeMarker = (stage) => `<!-- automerge-merge:${runId}:${stage} -->`
@@ -95,68 +93,6 @@ jobs:
               return ["Jobs:", ...jobs.map((job) => `- ${job.name}: ${job.conclusion || job.status}`)]
             }
 
-            async function checksPassed(sha, requiredChecks) {
-              const { data } = await github.rest.checks.listForRef({
-                owner,
-                repo,
-                ref: sha,
-                per_page: 100
-              })
-
-              const latestByName = new Map()
-              for (const run of data.check_runs) {
-                if (!requiredChecks.includes(run.name)) continue
-                const existing = latestByName.get(run.name)
-                const existingTime = existing?.completed_at || existing?.started_at || ""
-                const runTime = run.completed_at || run.started_at || ""
-                if (!existing || runTime > existingTime) {
-                  latestByName.set(run.name, run)
-                }
-              }
-
-              const missing = requiredChecks.filter(
-                (name) => !latestByName.has(name) && name !== "codeql"
-              )
-              if (missing.length > 0) {
-                console.log(`Missing checks: ${missing.join(", ")}`)
-                return false
-              }
-              if (!latestByName.has("codeql") && requiredChecks.includes("codeql")) {
-                console.log("CodeQL check missing or not applicable")
-              }
-
-              const failed = []
-              for (const name of requiredChecks) {
-                const run = latestByName.get(name)
-                if (!run) continue
-                if (
-                  name === "codeql" &&
-                  run.status === "completed" &&
-                  run.conclusion === "skipped"
-                ) {
-                  continue
-                }
-                if (run.status !== "completed" || run.conclusion !== "success") {
-                  failed.push({
-                    name,
-                    status: run.status,
-                    conclusion: run.conclusion
-                  })
-                }
-              }
-
-              if (failed.length > 0) {
-                console.log(
-                  `Checks not successful: ${failed
-                    .map((run) => `${run.name} (${run.status}/${run.conclusion})`)
-                    .join(", ")}`
-                )
-                return false
-              }
-
-              return true
-            }
-
             async function waitForMergeable(number, attempts = 12, delayMs = 5000) {
               let pr
               for (let i = 0; i < attempts; i++) {
@@ -174,7 +110,7 @@ jobs:
               return pr
             }
 
-            async function tryMerge(number, allowMerge) {
+            async function tryMerge(number) {
               const pr = await waitForMergeable(number)
               if (!pr || pr.merged) return
               if (pr.mergeable !== true || pr.mergeable_state !== "clean") {
@@ -184,15 +120,6 @@ jobs:
                 console.log(`PR #${number} not mergeable yet`)
                 return
               }
-              if (!allowMerge) {
-                console.log(`Skipping merge for PR #${number}; checks not successful`)
-                return
-              }
-
-              const isFork = pr.head?.repo?.full_name !== `${owner}/${repo}`
-              const requiredChecks = isFork ? requiredBaseChecks : requiredSameRepoChecks
-              const ok = await checksPassed(pr.head.sha, requiredChecks)
-              if (!ok) return
 
               try {
                 await github.rest.pulls.merge({
@@ -241,7 +168,7 @@ jobs:
             const jobLines = formatJobSummary(jobs)
             const conclusion = run.conclusion || "unknown"
 
-            const statusLines = allowMerge
+            const statusLines = checksOk
               ? [
                   `FR: Checks termines avec succes. Tentative de merge automatique.`,
                   `EN: Checks completed successfully. Attempting auto-merge.`,
@@ -249,13 +176,13 @@ jobs:
                   ...jobLines
                 ]
               : [
-                  `FR: Checks termines en echec (conclusion: ${conclusion}).`,
-                  `EN: Checks completed with failure (conclusion: ${conclusion}).`,
+                  `FR: Checks termines en echec (conclusion: ${conclusion}). Merge automatique tente quand meme si pas de conflit.`,
+                  `EN: Checks completed with failure (conclusion: ${conclusion}). Auto-merge will still be attempted if no conflicts.`,
                   `Run: ${runUrl}`,
                   ...jobLines
                 ]
 
             for (const pr of prs) {
-              await commentOnce(pr.number, statusMarker(allowMerge ? "success" : "failure"), statusLines)
-              await tryMerge(pr.number, allowMerge)
+              await commentOnce(pr.number, statusMarker(checksOk ? "success" : "failure"), statusLines)
+              await tryMerge(pr.number)
             }

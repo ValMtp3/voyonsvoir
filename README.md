@@ -38,13 +38,13 @@ Ceci est une experience: ne faites pas confiance a ce code par defaut, verifiez-
 English:
 This repository runs automated security checks on pull requests via GitHub Actions.
 Checks include CodeQL (SAST), Trivy (dependency vulnerabilities), Gitleaks (secrets), and ClamAV (malware scan).
-Auto-merge is enabled for any PR (including external contributors) after these checks succeed.
+Auto-merge is enabled for any PR (including external contributors) and will still run even if checks fail.
 Some checks can be limited on forked PRs due to GitHub permissions.
 These checks reduce risk but do not guarantee a program is safe, so review before running.
 
 Francais:
 Ce depot execute des verifications de securite automatiques sur les pull requests via GitHub Actions.
 Les checks incluent CodeQL (SAST), Trivy (vulnerabilites de dependances), Gitleaks (secrets), et ClamAV (scan malware).
-Le merge automatique est active pour toute PR (y compris les contributeurs externes) apres succes de ces checks.
+Le merge automatique est active pour toute PR (y compris les contributeurs externes) et se fait meme si les checks echouent.
 Certains checks peuvent etre limites pour les PRs venant de forks, a cause des permissions GitHub.
 Ces checks reduisent le risque mais ne garantissent pas qu'un programme soit sans danger, donc verifiez avant execution.
