@@ -1,7 +1,39 @@
-# voyonsvoir
+# System Defense
 
 Les gens, on va jouer à un jeu. 
 Voici un repo totalement vide : vous en faites ce que vous voulez, vous dev tout ce que vous voulez.
+
+---
+
+## 🍫 ChocoRoulette - Le Jeu en Ligne 🌶️
+
+> [!CAUTION]
+> **4 chocolats. 1 piégé au Carolina Reaper. Oserez-vous jouer ?**
+
+[![Jouer maintenant](https://img.shields.io/badge/🎲_JOUER_MAINTENANT-FF4500?style=for-the-badge&logoColor=white)](./inferno-peppers.html)
+
+| 🍫 Chocolat classique | 🌶️ Chocolat piégé |
+|:---:|:---:|
+| Praliné savoureux | 10% Carolina Reaper |
+| 3 chances sur 4 | 1 chance sur 4 |
+| 😋 Délicieux | 🔥 20 min de feu |
+
+> [!TIP]
+> **Envie de passer au vrai défi ?** Le coffret physique existe !  
+> 👉 [Commander sur Inferno Peppers](https://www.inferno-peppers.fr/produits/packs/chocoroulette-4-chocolats-1-piege)
+
+<details>
+<summary>📖 <strong>C'est quoi le Carolina Reaper ?</strong></summary>
+
+Le **Carolina Reaper** a été le piment le plus fort du monde de 2013 à 2023, avec une moyenne de **1,641 million d'unités Scoville** (et des pics à 2,2 millions !).
+
+Pour comparaison :
+- 🫑 Poivron : 0 SHU
+- 🌶️ Jalapeño : 2 500 - 8 000 SHU  
+- 🔥 Habanero : 100 000 - 350 000 SHU
+- ☠️ **Carolina Reaper** : 1 400 000 - 2 200 000 SHU
+
+</details>
 
 ### 📜 La règle du jeu
 * Je merge **automatiquement** toutes les PR qui n’ont pas de conflit.

@@ -17,7 +17,7 @@ const MYSTERIOUS_MESSAGES = [
   "THERE IS NO GOING BACK",
 ] as const;
 const GLITCH_CHARS = "!<>-_\\/[]{}—=+*^?#________";
-const BUTTON_TEXT = "Enter";
+const BUTTON_TEXT = "Clique";
 
 const THRESHOLDS = {
   WARNING: 5,
@@ -105,6 +105,10 @@ export default function Home() {
         <div className={styles.logoText}>VOYONSVOIR</div>
         <div className={styles.logoSubtext}>REALITY DISTORTION EXPERIMENT</div>
       </div>
+
+      <a className={styles.contributorsLink} href="/contributors">
+        Contributeurs
+      </a>
 
       {activeEffect === "matrix" && (
         <div className={styles.matrixRain}>

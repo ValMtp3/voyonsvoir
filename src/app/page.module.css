@@ -71,6 +71,33 @@
   text-transform: uppercase;
 }
 
+.contributorsLink {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  z-index: 100;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #00ff00;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px 24px;
+  border: 2px solid #00ff00;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.contributorsLink:hover {
+  background-color: rgba(0, 255, 0, 0.1);
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);
+  transform: translateY(-2px);
+  letter-spacing: 3px;
+}
+
 .button {
   font-size: 3rem;
   padding: 35px 90px;
@@ -496,6 +523,18 @@
 
   .logoText {
     font-size: 1.2rem;
+  }
+
+  .contributorsLink {
+    top: 20px;
+    right: 20px;
+    font-size: 0.7rem;
+    padding: 8px 16px;
+    letter-spacing: 1.5px;
+  }
+
+  .contributorsLink:hover {
+    letter-spacing: 2px;
   }
 
   .button {
