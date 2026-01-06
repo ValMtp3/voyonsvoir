@@ -6,7 +6,7 @@ import styles from "./OmEasterEgg.module.css";
 export default function OmEasterEgg() {
   const [showOverlay, setShowOverlay] = useState(false);
   const clickCountRef = useRef(0);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleClick = () => {
